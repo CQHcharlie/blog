@@ -7,6 +7,8 @@ on:
     branches: [ master ]
   # 允许你在 GitHub 上的 Actions 标签中手动触发此"工作流程"
   workflow_dispatch:
+  repository_dispatch:
+    types: [content-updated]
 
 # 需要写入权限来推送到pages分支
 permissions:

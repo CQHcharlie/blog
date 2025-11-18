@@ -41,3 +41,9 @@ cache/
 fuwari/
 src/data/myself.ts
 src/pages/myself.astro
+
+# Symlink
+src/content/posts
+public/images
+src/data
+src/content/spec

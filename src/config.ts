@@ -23,6 +23,7 @@ export const siteConfig: SiteConfig = {
 	title: "肆鸠的博客",
 	subtitle: "真的有人看吗AWA",
 	siteURL: "https://blog.sijiu49.us.kg/", // 请替换为你的站点URL，以斜杠结尾
+	siteStartDate: "2025-07-01", // 站点开始运行日期，用于站点统计组件计算运行天数
 
 	timeZone: SITE_TIMEZONE,
 
@@ -64,7 +65,8 @@ export const siteConfig: SiteConfig = {
 	// 文章列表布局配置
 	postListLayout: {
 		// 默认布局模式："list" 列表模式（单列布局），"grid" 网格模式（双列布局）
-		defaultMode: "grid",
+		// 注意：如果侧边栏配置启用了"both"双侧边栏，则无法使用文章列表"grid"网格（双列）布局
+		defaultMode: "list",
 		// 是否允许用户切换布局
 		allowSwitch: true,
 	},
@@ -308,12 +310,15 @@ export const navBarConfig: NavBarConfig = {
 			url: "/content/",
 			icon: "material-symbols:person",
 			children: [
-				// LinkPreset.Anime,
-				// LinkPreset.Diary,
 				// {
-				// 	name: "Gallery",
-				// 	url: "/albums/",
-				// 	icon: "material-symbols:photo-library",
+				// 	name: "动漫",
+				// 	url: "/anime/",
+				// 	icon: "material-symbols:movie",
+				// },
+				// {
+				// 	name: "日记",
+				// 	url: "/diary/",
+				// 	icon: "material-symbols:book",
 				// },
 				{
 					name: "设备",
@@ -327,7 +332,18 @@ export const navBarConfig: NavBarConfig = {
 			name: "关于",
 			url: "/content/",
 			icon: "material-symbols:info",
-			children: [LinkPreset.About, LinkPreset.Friends],
+			children: [
+				{
+					name: "关于我",
+					url: "/about/",
+					icon: "material-symbols:person",
+				},
+				{
+					name: "友链",
+					url: "/friends/",
+					icon: "material-symbols:group",
+				},
+			],
 		},
 		{
 			name: "其它",
@@ -413,7 +429,8 @@ export const announcementConfig: AnnouncementConfig = {
 export const musicPlayerConfig: MusicPlayerConfig = {
 	enable: true, // 启用音乐播放器功能
 	mode: "meting", // 音乐播放器模式，可选 "local" 或 "meting"
-	meting_api: "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&auth=:auth&r=:r", // Meting API 地址
+	meting_api:
+		"https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&auth=:auth&r=:r", // Meting API 地址
 	id: "14175652304", // 歌单ID
 	server: "netease", // 音乐源服务器。有的meting的api源支持更多平台,一般来说,netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
 	type: "playlist", // 播单类型
@@ -427,17 +444,14 @@ export const footerConfig: FooterConfig = {
 	// FooterConfig.html 可能会在未来的某个版本弃用
 };
 
-
 /**
  * 侧边栏布局配置
  * 用于控制侧边栏组件的显示、排序、动画和响应式行为
+ * sidebar: 控制组件在左侧栏和右侧栏,注意移动端是不会显示右侧栏的内容(unilateral模式除外),在设置了right属性的时候请确保你使用双侧(both)布局
  */
 export const sidebarLayoutConfig: SidebarLayoutConfig = {
-	// 是否启用侧边栏功能
-	enable: true,
-
-	// 侧边栏位置：左侧或右侧
-	position: "left",
+	// 侧边栏位置：单侧(unilateral)或双侧(both)
+	position: "both",
 
 	// 侧边栏组件配置列表
 	components: [
@@ -450,6 +464,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			order: 1,
 			// 组件位置："top" 表示固定在顶部
 			position: "top",
+			// 所在侧边栏
+			sidebar: "left",
 			// CSS 类名，用于应用样式和动画
 			class: "onload-animation",
 			// 动画延迟时间（毫秒），用于错开动画效果
@@ -464,6 +480,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			order: 2,
 			// 组件位置："top" 表示固定在顶部
 			position: "top",
+			// 所在侧边栏
+			sidebar: "left",
 			// CSS 类名
 			class: "onload-animation",
 			// 动画延迟时间
@@ -478,6 +496,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			order: 3,
 			// 组件位置："sticky" 表示粘性定位，可滚动
 			position: "sticky",
+			// 所在侧边栏
+			sidebar: "left",
 			// CSS 类名
 			class: "onload-animation",
 			// 动画延迟时间
@@ -496,7 +516,9 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件显示顺序
 			order: 5,
 			// 组件位置："sticky" 表示粘性定位
-			position: "sticky",
+			position: "top",
+			// 所在侧边栏
+			sidebar: "left",
 			// CSS 类名
 			class: "onload-animation",
 			// 动画延迟时间
@@ -506,6 +528,38 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 				// 折叠阈值：当标签数量超过20个时自动折叠
 				collapseThreshold: 20,
 			},
+		},
+		{
+			// 组件类型：站点统计组件
+			type: "site-stats",
+			// 是否启用该组件
+			enable: true,
+			// 组件显示顺序
+			order: 5,
+			// 组件位置
+			position: "top",
+			// 所在侧边栏
+			sidebar: "right",
+			// CSS 类名
+			class: "onload-animation",
+			// 动画延迟时间
+			animationDelay: 200,
+		},
+		{
+			// 组件类型：日历组件(移动端不显示)
+			type: "calendar",
+			// 是否启用该组件
+			enable: true,
+			// 组件显示顺序
+			order: 6,
+			// 组件位置
+			position: "top",
+			// 所在侧边栏
+			sidebar: "right",
+			// CSS 类名
+			class: "onload-animation",
+			// 动画延迟时间
+			animationDelay: 250,
 		},
 	],
 

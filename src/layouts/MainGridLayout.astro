@@ -6,11 +6,12 @@ import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
+import FloatingTOC from "../components/misc/FloatingTOC.astro";
 import FullscreenWallpaper from "../components/misc/FullscreenWallpaper.astro";
 import IconifyLoader from "../components/misc/IconifyLoader.astro";
 import ImageWrapper from "../components/misc/ImageWrapper.astro";
 import TypewriterText from "../components/TypewriterText.astro";
-import TOC from "../components/widget/TOC.astro";
+// import TOC from "../components/widget/TOC.astro";
 import {
 	fullscreenWallpaperConfig,
 	sidebarLayoutConfig,
@@ -146,7 +147,7 @@ const initialRightSidebarHidden = defaultPostListLayout === "grid";
 // 动态网格布局类名 - 根据侧边栏模式调整列宽
 const gridCols = `
 	${mobileShowSidebar ? "grid-cols-1" : "grid-cols-1"}
-	${tabletShowSidebar ? "md:grid-cols-[17.5rem_1fr]" : "md:grid-cols-1"}
+	${tabletShowSidebar ? "grid-cols-1" : "grid-cols-1"}
 	${desktopShowSidebar ? "lg:grid-cols-[17.5rem_1fr]" : "lg:grid-cols-1"}
 	${isBothSidebarMode ? "lg:grid-cols-[17.5rem_1fr_17.5rem]" : ""}
 `
@@ -157,7 +158,7 @@ const gridCols = `
 const sidebarClass = `
 	mb-4 row-start-2 row-end-3 col-span-1 onload-animation
 	${mobileShowSidebar ? "block" : "hidden"}
-	${tabletShowSidebar ? "md:block md:row-start-1 md:row-end-2 md:max-w-[17.5rem] md:col-start-1 md:col-end-2" : "md:hidden"}
+	${tabletShowSidebar ? "block row-start-2 row-end-3 col-span-1" : "hidden"}
 	${desktopShowSidebar ? "lg:block lg:row-start-1 lg:row-end-2 lg:max-w-[17.5rem] lg:col-start-1 lg:col-end-2" : "lg:hidden"}
 `
 	.trim()
@@ -177,11 +178,12 @@ const rightSidebarClass = `
 	.replace(/\s+/g, " ");
 
 // 主内容区域类名 - 根据侧边栏模式调整grid-column
-// 手机端：主内容在最上方row-1，侧边栏在下方
+// 平板设备和手机端：主内容在最上方row-1，侧边栏在下方
+// 桌面端：主内容和侧边栏并排显示
 const mainContentClass = `
 	transition-swup-fade overflow-hidden w-full
 	col-span-1 row-start-1 row-end-2
-	${tabletShowSidebar ? "md:col-start-2 md:col-end-3" : "md:col-span-1"}
+	${tabletShowSidebar ? "col-span-1 row-start-1 row-end-2" : "col-span-1"}
 	${desktopShowSidebar ? "lg:col-start-2 lg:col-end-3" : "lg:col-span-1"}
 	${isBothSidebarMode ? "lg:col-start-2 lg:col-end-3" : ""}
 `
@@ -200,7 +202,15 @@ const transparentClass = shouldEnableTransparency
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug}>
 
-<script is:inline define:vars={{navbarTransparentMode: siteConfig.banner?.navbar?.transparentMode || "semi", defaultWallpaperMode: siteConfig.wallpaperMode.defaultMode, defaultPostListLayout: siteConfig.postListLayout?.defaultMode || "list"}}>
+<script is:inline define:vars={{navbarTransparentMode: siteConfig.banner?.navbar?.transparentMode || "semi", defaultWallpaperMode: siteConfig.wallpaperMode.defaultMode, defaultPostListLayout: siteConfig.postListLayout?.defaultMode || "list", useJapaneseBadge: siteConfig.toc?.useJapaneseBadge || false, tocDepth: siteConfig.toc?.depth || 3}}>
+	// 将siteConfig暴露到window对象
+	window.siteConfig = {
+		toc: {
+			useJapaneseBadge: useJapaneseBadge,
+			depth: tocDepth
+		}
+	};
+	
 	// 立即执行，在页面渲染前应用壁纸模式和布局模式，避免闪烁
 	(function() {
 		const wallpaperMode = localStorage.getItem('wallpaperMode') || defaultWallpaperMode;
@@ -266,12 +276,12 @@ const transparentClass = shouldEnableTransparency
 					
 					if (currentLayout === 'grid') {
 						postListContainer.classList.add('grid-mode');
-						postListContainer.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-6');
+						postListContainer.classList.add('grid', 'grid-cols-1', 'lg:grid-cols-2', 'gap-6');
 						postListContainer.classList.remove('flex', 'flex-col');
 					} else {
 						postListContainer.classList.add('list-mode');
 						postListContainer.classList.add('flex', 'flex-col');
-						postListContainer.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-6');
+						postListContainer.classList.remove('grid', 'grid-cols-1', 'lg:grid-cols-2', 'gap-6');
 					}
 				}
 			}
@@ -419,12 +429,12 @@ const transparentClass = shouldEnableTransparency
 						
 						if (currentLayout === 'grid') {
 							postListContainer.classList.add('grid-mode');
-							postListContainer.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-6');
+							postListContainer.classList.add('grid', 'grid-cols-1', 'lg:grid-cols-2', 'gap-6');
 							postListContainer.classList.remove('flex', 'flex-col');
 						} else {
 							postListContainer.classList.add('list-mode');
 							postListContainer.classList.add('flex', 'flex-col');
-							postListContainer.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-6');
+							postListContainer.classList.remove('grid', 'grid-cols-1', 'lg:grid-cols-2', 'gap-6');
 						}
 					}
 					
@@ -719,7 +729,7 @@ const transparentClass = shouldEnableTransparency
 <div class="absolute w-full z-0 hidden 2xl:block">
     <div class="relative max-w-[var(--page-width)] mx-auto">
         <!-- TOC component -->
-        {siteConfig.toc.enable && <div id="toc-wrapper" class:list={["hidden lg:block transition absolute top-0 w-[var(--toc-width)] items-center",
+        <!-- {siteConfig.toc.enable && <div id="toc-wrapper" class:list={["hidden lg:block transition absolute top-0 w-[var(--toc-width)] items-center",
             "-right-[var(--toc-width)]",
             {"toc-hide": siteConfig.wallpaperMode.defaultMode === "banner"}]}
         >
@@ -728,7 +738,9 @@ const transparentClass = shouldEnableTransparency
                     <TOC headings={headings}></TOC>
                 </div>
             </div>
-        </div>}
+        </div>} -->
+        <!-- 悬浮TOC组件 -->
+        {siteConfig.toc.enable && <FloatingTOC headings={headings}></FloatingTOC>}
 
         <!-- #toc needs to exist for Swup to work normally -->
         {!siteConfig.toc.enable && <div id="toc"></div>}
@@ -918,8 +930,8 @@ body.no-banner-mode .absolute.w-full.z-30 {
     }
 }
 
-/* 平板设备横幅优化 (641px - 1023px) */
-@media (min-width: 641px) and (max-width: 1023px) {
+/* 平板设备横幅优化 (641px - 1279px) */
+@media (min-width: 641px) and (max-width: 1279px) {
     /* Banner wrapper 高度优化 */
     #banner-wrapper {
         height: 70vh !important;
@@ -992,8 +1004,8 @@ body.no-banner-mode .absolute.w-full.z-30 {
     }
 }
 
-/* 桌面端保持居中 (1024px+) */
-@media (min-width: 1024px) {
+/* 桌面端保持居中 (1280px+) */
+@media (min-width: 1280px) {
     .banner-text-overlay {
         align-items: center !important; /* 垂直居中 */
         justify-content: center !important; /* 水平居中 */
@@ -1046,7 +1058,7 @@ body.no-banner-mode .absolute.w-full.z-30 {
 }
 
 /* 移动端图片优化 */
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
     /* 移动端图片容器优化 */
     .carousel-item img,
     #banner img {
@@ -1096,7 +1108,7 @@ body.no-banner-mode .absolute.w-full.z-30 {
 }
 
 /* 手机端非首页隐藏banner - 改进的分阶段动画 */
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
     #banner-wrapper {
         transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease-out;
         transform-origin: top center;
@@ -1245,21 +1257,39 @@ body.no-banner-mode .absolute.w-full.z-30 {
     /* 在桌面端只显示左侧边栏和主内容 */
 }
 
-@media (min-width: 768px) {
+/* 平板设备Grid模式：使用单列布局，和手机端保持一致 */
+@media (min-width: 768px) and (max-width: 1023px) {
     #main-grid[data-layout-mode="grid"] {
-        grid-template-columns: 17.5rem 1fr !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto 1fr auto !important;
+    }
+    
+    #main-grid[data-layout-mode="grid"] #swup-container {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
     }
 }
 
-@media (min-width: 1024px) {
+/* 桌面设备Grid模式：使用双列布局 */
+@media (min-width: 1280px) {
     #main-grid[data-layout-mode="grid"] {
         grid-template-columns: 17.5rem 1fr !important;
     }
+    
+    #main-grid[data-layout-mode="grid"] #swup-container {
+        grid-column: 2 / 3;
+    }
 }
 
-/* Grid 模式下主内容区域的列位置调整 */
-#main-grid[data-layout-mode="grid"] #swup-container {
-    grid-column: 2 / 3;
+/* 确保大屏桌面设备Grid模式配置 */
+@media (min-width: 1280px) {
+    #main-grid[data-layout-mode="grid"] {
+        grid-template-columns: 17.5rem 1fr !important;
+    }
+    
+    #main-grid[data-layout-mode="grid"] #swup-container {
+        grid-column: 2 / 3;
+    }
 }
 
 /* 移动端当banner被禁用时的布局样式 */
@@ -1394,7 +1424,7 @@ body.no-banner-mode .absolute.w-full.z-30 {
 }
 
 /* 移动端水波纹特殊优化 */
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
     #header-waves {
         /* 确保水波纹容器不被裁剪 */
         overflow: visible;

@@ -11,7 +11,7 @@ import FullscreenWallpaper from "../components/misc/FullscreenWallpaper.astro";
 import IconifyLoader from "../components/misc/IconifyLoader.astro";
 import ImageWrapper from "../components/misc/ImageWrapper.astro";
 import TypewriterText from "../components/TypewriterText.astro";
-// import TOC from "../components/widget/TOC.astro";
+import TOC from "../components/widget/TOC.astro";
 import {
 	fullscreenWallpaperConfig,
 	sidebarLayoutConfig,
@@ -728,19 +728,19 @@ const transparentClass = shouldEnableTransparency
 <!-- The things that should be under the banner, only the TOC for now -->
 <div class="absolute w-full z-0 hidden 2xl:block">
     <div class="relative max-w-[var(--page-width)] mx-auto">
-        <!-- TOC component -->
-        <!-- {siteConfig.toc.enable && <div id="toc-wrapper" class:list={["hidden lg:block transition absolute top-0 w-[var(--toc-width)] items-center",
-            "-right-[var(--toc-width)]",
-            {"toc-hide": siteConfig.wallpaperMode.defaultMode === "banner"}]}
-        >
-            <div id="toc-inner-wrapper" class="fixed top-14 w-[var(--toc-width)] h-[calc(100vh_-_20rem)] overflow-y-scroll overflow-x-hidden hide-scrollbar">
-                <div id="toc" class="w-full h-full transition-swup-fade ">       
-                    <TOC headings={headings}></TOC>
-                </div>
-            </div>
-        </div>} -->
-        <!-- 悬浮TOC组件 -->
-        {siteConfig.toc.enable && <FloatingTOC headings={headings}></FloatingTOC>}
+        <!-- TOC component --> 
+		 {siteConfig.toc.enable && !siteConfig.toc.useFloatingNav && <div id="toc-wrapper" class:list={["hidden lg:block transition absolute top-0 w-[var(--toc-width)] items-center", 
+		     "-right-[var(--toc-width)]", 
+		     {"toc-hide": siteConfig.wallpaperMode.defaultMode === "banner"}]} 
+		 > 
+		     <div id="toc-inner-wrapper" class="fixed top-14 w-[var(--toc-width)] h-[calc(100vh_-_20rem)] overflow-y-scroll overflow-x-hidden hide-scrollbar"> 
+		         <div id="toc" class="w-full h-full transition-swup-fade ">       	 
+		             <TOC headings={headings}></TOC> 
+		         </div> 
+		     </div> 
+		 </div>} 
+		 <!-- 悬浮TOC组件 --> 
+		 {siteConfig.toc.enable && siteConfig.toc.useFloatingNav && <FloatingTOC headings={headings}></FloatingTOC>}
 
         <!-- #toc needs to exist for Swup to work normally -->
         {!siteConfig.toc.enable && <div id="toc"></div>}

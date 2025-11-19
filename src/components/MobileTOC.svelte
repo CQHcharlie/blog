@@ -207,6 +207,44 @@ const setupIntersectionObserver = () => {
 	});
 };
 
+const setupSwupListeners = () => {
+	if (typeof window !== "undefined" && (window as any).swup) {
+		const swup = (window as any).swup;
+		
+		// 监听页面内容替换事件
+		swup.hooks.on("content:replace", () => {
+			// 延迟执行，确保DOM已更新
+			setTimeout(() => {
+				init();
+			}, 100);
+		});
+		
+		// 监听页面视图事件
+		swup.hooks.on("page:view", () => {
+			// 延迟执行，确保页面已完全加载
+			setTimeout(() => {
+				init();
+			}, 100);
+		});
+		
+		// 监听动画完成事件
+		swup.hooks.on("animation:in:end", () => {
+			// 延迟执行，确保动画已完成
+			setTimeout(() => {
+				init();
+			}, 50);
+		});
+		
+		console.log("MobileTOC Swup listeners registered");
+	} else {
+		// 降级处理：监听普通页面切换事件
+		window.addEventListener("popstate", () => {
+			setTimeout(init, 100);
+		});
+		console.log("MobileTOC fallback listeners registered");
+	}
+};
+
 const checkSwupAvailability = () => {
 	if (typeof window !== "undefined") {
 		// 检查Swup是否已加载
@@ -218,6 +256,8 @@ const checkSwupAvailability = () => {
 				if ((window as any).swup) {
 					swupReady = true;
 					document.removeEventListener("swup:enable", checkSwup);
+					// Swup加载完成后设置监听器
+					setupSwupListeners();
 				}
 			};
 
@@ -229,8 +269,13 @@ const checkSwupAvailability = () => {
 				if ((window as any).swup) {
 					swupReady = true;
 					document.removeEventListener("swup:enable", checkSwup);
+					// Swup加载完成后设置监听器
+					setupSwupListeners();
 				}
 			}, 1000);
+		} else {
+			// Swup已经加载，直接设置监听器
+			setupSwupListeners();
 		}
 	}
 };
@@ -259,6 +304,14 @@ onMount(() => {
 			observer.disconnect();
 		}
 		window.removeEventListener("scroll", updateActiveHeading);
+		
+		// 清理Swup事件监听器
+		if (typeof window !== "undefined" && (window as any).swup) {
+			const swup = (window as any).swup;
+			swup.hooks.off("content:replace");
+			swup.hooks.off("page:view");
+			swup.hooks.off("animation:in:end");
+		}
 	};
 });
 

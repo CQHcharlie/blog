@@ -164,6 +164,7 @@ export type SiteConfig = {
 		enable: boolean;
 		depth: 1 | 2 | 3;
 		useJapaneseBadge?: boolean; // 使用日语假名标记（あいうえお...）代替数字
+		useFloatingNav?: boolean; // 是否启用悬浮导航，false则使用固定位置的TOC组件
 	};
 	generateOgImages: boolean;
 	favicon: Favicon[];

@@ -74,7 +74,10 @@ const formatDate = (dateString: string) => {
 };
 
 // 计算持续时间
-const getDuration = (startDate: string, endDate?: string) => {
+const getDuration = (startDate: string, endDate?: string, show?: boolean) => {
+	if (show === false) {
+		return;
+  }
 	const start = new Date(startDate);
 	const end = endDate ? new Date(endDate) : new Date();
 	const diffTime = Math.abs(end.getTime() - start.getTime());

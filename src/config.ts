@@ -20,10 +20,10 @@ import { LinkPreset } from "./types/config";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 const SITE_TIMEZONE = 8; //设置你的网站时区 from -12 to 12 default in UTC+8
 export const siteConfig: SiteConfig = {
-	title: "肆鸠的博客",
+	title: "Charlie的博客",
 	subtitle: "真的有人看吗AWA",
-	siteURL: "https://blog.sijiu49.us.kg/", // 请替换为你的站点URL，以斜杠结尾
-	siteStartDate: "2025-07-01", // 站点开始运行日期，用于站点统计组件计算运行天数
+	siteURL: "https://blog.charliehome.xx.kg/", // 请替换为你的站点URL，以斜杠结尾
+	siteStartDate: "2025-11-22", // 站点开始运行日期，用于站点统计组件计算运行天数
 
 	timeZone: SITE_TIMEZONE,
 
@@ -49,7 +49,7 @@ export const siteConfig: SiteConfig = {
 	// 顶栏标题配置
 	navbarTitle: {
 		// 顶栏标题文本
-		text: "肆鸠的博客",
+		text: "Charlie的博客",
 		// 顶栏标题图标路径，默认使用 public/assets/home/home.png
 		icon: "assets/home/home.png",
 	},
@@ -294,13 +294,13 @@ export const navBarConfig: NavBarConfig = {
 			children: [
 				{
 					name: "GitHub",
-					url: "https://github.com/Si-Jiu",
+					url: "https://github.com/CQHcharlie",
 					external: true,
 					icon: "fa6-brands:github",
 				},
 				{
 					name: "Bilibili",
-					url: "https://space.bilibili.com/443950222",
+					url: "https://space.bilibili.com/3494374994348639",
 					external: true,
 					icon: "fa6-brands:bilibili",
 				},
@@ -373,8 +373,8 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.webp", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
-	name: "肆鸠",
-	bio: "你说得对，但是我认为这个意大利面应该拌42号混凝土",
+	name: "Charlie",
+	bio: "你说得对",
 	typewriter: {
 		enable: true, // 启用个人简介打字机效果
 		speed: 80, // 打字速度（毫秒）
@@ -383,12 +383,12 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "Bilibli",
 			icon: "fa6-brands:bilibili",
-			url: "https://space.bilibili.com/443950222",
+			url: "https://space.bilibili.com/3494374994348639",
 		},
 		{
 			name: "GitHub",
 			icon: "fa6-brands:github",
-			url: "https://github.com/Si-Jiu",
+			url: "https://github.com/CQHcharlie",
 		},
 	],
 };
@@ -665,6 +665,6 @@ export const umamiConfig = {
 	apiKey: import.meta.env.UMAMI_API_KEY || "api_xxxxxxxx", // API密钥优先从环境变量读取，否则使用配置文件中的值
 	baseUrl: "https://api.umami.is", // Umami Cloud API地址
 	scripts: `
-<script defer src="https://cloud.umami.is/script.js" data-website-id="b5a1ae40-9e11-4cb6-86fa-62486ac62406"></script>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="418a59ff-0c37-42f7-9875-b11e58d0ed6e"></script>
   `.trim(), // 上面填你要插入的Script,不用再去Layout中插入
 } as const;
